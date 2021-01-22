@@ -31,13 +31,13 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use('/build', express.static(path.join(__dirname, '../client/ys-enhance/build')))
-app.use('/assets', express.static(path.join(__dirname, '../client/ys-enhance/build/assets')));
-app.use('/static', express.static(path.join(__dirname, '../client/ys-enhance/build/static')));
+app.use('/build', express.static(path.join(__dirname, './build')))
+app.use('/assets', express.static(path.join(__dirname, './build/assets')));
+app.use('/static', express.static(path.join(__dirname, './build/static')));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', function(req, res){
-  res.sendFile(path.join(__dirname, '../client/ys-enhance/build/index.html'));
+  res.sendFile(path.join(__dirname, './build/index.html'));
 });
 
 //eventCtrl.newEvent(testObj);
