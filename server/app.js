@@ -8,7 +8,7 @@ const logger = require('morgan');
 const alpha = require('alphavantage')({ key: 'S7JDVTFR1AM335UC'});
 const indexRouter = require('./routes/index');
 //const usersRouter = require('./api/routes/userRoute');
-//const authRoute = require('./api/routes/auth');
+const authRoute = require('./api/routes/auth');
 
 //event controller
 const eventCtrl = require("./api/controllers/events/eventCtrl");
@@ -32,12 +32,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use('/build', express.static(path.join(__dirname, './build')))
-app.use('/assets', express.static(path.join(__dirname, './build/assets')));
+app.use('/assets', express.static(path.join(__dirname, '../client/ys-enhance/src/assets')));
 app.use('/static', express.static(path.join(__dirname, './build/static')));
 app.use(express.static(path.join(__dirname, 'public')));
-
+app.use('/api/auth', authRoute)
 app.get('/', function(req, res){
-  res.sendFile(path.join(__dirname, './build/index.html'));
+  res.sendFile(path.join(__dirname, '../client/ys-enhance/public/index.html'));
 });
 
 //eventCtrl.newEvent(testObj);
@@ -55,10 +55,15 @@ app.post('/event' , function(req, res, next){
   eventCtrl.newEvent(req.body, res, next);
   
 });
-app.put('/event', (req, res, next) => {
-  console.log(req.params);
-console.log(req.body);
-})
+app.put('/event:id', (req, res, next) => {
+console.log(req.body.params.id);
+var docUp = {
+  id: req.body.params.id,
+  data: req.body
+};
+
+eventCtrl.updateEvent(docUp, res, next);
+});
 
 app.delete('/event:id', (req, res, next) => {
  

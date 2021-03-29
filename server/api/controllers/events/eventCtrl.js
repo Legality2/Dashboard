@@ -31,10 +31,27 @@ module.exports.getEvents = function(res, next){
             next();
         };
         console.log(event);
-        res.json(event);
-        
+        res.json(event);      
     });
-   
+};
+module.exports.updateEvent = function(toUpdate, res, next){
+//id of document to update
+let docId = toUpdate.id;
+let eData = toUpdate.data.event;
+console.log(docId);
+console.log(eData)
+eventModal.findByIdAndUpdate(docId, eData, {new: true}, function(err){
+    if(err) {
+        console.log(err);
+        next()
+    }
+    else {
+        console.log("event was updated")
+        res.send({msg: 'update succesful'});
+    }
+});
+//toUpdate updated to replace database old data
+//respond back to client
 };
 
 module.exports.removeEvent = (id, res, next) => {
@@ -42,7 +59,7 @@ module.exports.removeEvent = (id, res, next) => {
     eventModal.remove({ _id: id }, function (err) {
         if (err){ 
             console.log(err);
-            newxt();
+            next();
         };
         // deleted at most one tank document
         console.log('event has beeen deleted');

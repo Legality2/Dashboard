@@ -4,7 +4,7 @@ var mongoose = require('mongoose');
 var User = require('../models/user-model.js');
 var jwt = require('jsonwebtoken');
 var config = require('../../config/config.js');
-var passport = require('passport');
+
 var userCtrl = require('../controllers/userCtrl.js');
 const { google } = require('googleapis');
 const OAuth2Data = require('../../config/private/google_key.json');
@@ -98,7 +98,7 @@ function verifyToken(req, res, next) {
   };
 
 //get user logged in info 
-router.get('/api/auth/me', verifyToken, function(req, res, next) {
+router.get('/me', verifyToken, function(req, res, next) {
 
     User.findById(req.userId, { password: 0 }, function (err, user) {
       if (err) return res.status(500).send("There was a problem finding the user.");
@@ -108,7 +108,7 @@ router.get('/api/auth/me', verifyToken, function(req, res, next) {
     });
 });
 //create user 
-router.post('/api/auth/signup', function(req, res, next){
+router.post('/signup', function(req, res, next){
     var newUser = new User({
         username: req.body.username,
         email: req.body.email,
@@ -133,7 +133,7 @@ router.post('/api/auth/signup', function(req, res, next){
         });
 });
 //login user 
-router.post('/api/auth/login', function(req, res){
+router.post('/login', function(req, res){
     console.log(req.body);
 User.findOne({username: req.body.Username}, function(err, usr){
 
@@ -189,7 +189,7 @@ User.findOne({username: req.body.Username}, function(err, usr){
 
 
 
-router.get('/api/auth/google', function(req, res){
+router.get('/google', function(req, res){
 //google url send to client
 const urlInfo = urlGoogle();
 res.json(urlInfo);
