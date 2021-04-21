@@ -7,7 +7,7 @@ const cors = require('cors');
 const logger = require('morgan');
 const alpha = require('alphavantage')({ key: 'S7JDVTFR1AM335UC'});
 const indexRouter = require('./routes/index');
-//const usersRouter = require('./api/routes/userRoute');
+const userRoute = require('./api/routes/userRoute');
 const authRoute = require('./api/routes/auth');
 
 //event controller
@@ -36,6 +36,7 @@ app.use('/assets', express.static(path.join(__dirname, '../client/ys-enhance/src
 app.use('/static', express.static(path.join(__dirname, './build/static')));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api/auth', authRoute)
+app.use('/api', userRoute);
 app.get('/', function(req, res){
   res.sendFile(path.join(__dirname, '../client/ys-enhance/public/index.html'));
 });

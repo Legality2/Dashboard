@@ -109,6 +109,7 @@ router.get('/me', verifyToken, function(req, res, next) {
 });
 //create user 
 router.post('/signup', function(req, res, next){
+  console.log(req.body);
     var newUser = new User({
         username: req.body.username,
         email: req.body.email,
@@ -128,40 +129,40 @@ router.post('/signup', function(req, res, next){
             } else {
                 console.log('new user has signed up');
                 res.json({msg: "you successfully created an account!"});
-                next();
             }
         });
 });
 //login user 
 router.post('/login', function(req, res){
     console.log(req.body);
-User.findOne({username: req.body.Username}, function(err, usr){
 
-    if(err) {
-      console.log(err)
-    }
-    if(!usr){
-      console.log('No user was found');
-    } else if (usr){
-    
-           usr.comparePassword(req.body.password, function(isMatch) {
-                if (!isMatch) {
-                    console.log("Attempt failed to login with user:" + usr.username);
-                    return res.send(401);
-                }
-                 var token;
-                  token = usr.generateJWT();
-                  usr.token = token;
-                  console.log('user role is:' + usr.role);
-                  res.status(200);
-                  res.json({
-                    "token" : token
-                  });
+    User.findOne({username: req.body.username}, function(err, user){
+      user.comparePassword(req.body.password, function(isMatch) {
+        if (!isMatch) {
+          let m = "Attempt failed to login with user:" + user.username;
+        
+            console.log("Attempt failed to login with user:" + user.username);
+            
+            res.json({msg: m});
+        }
+         var token;
+          token = user.generateJWT();
+          user.token = token;
+          console.log('user role is:' + user.role);
+          res.json({
+            "token" : token
+          });
 
+
+   });
+    });
+
+   
+   
     
-           });
-    }
-    })
+           
+    
+  
 });
 //client google login
 
@@ -201,7 +202,7 @@ const ob = {};
 var userInfo = getGoogleAccountFromCode(cod);
  userInfo.then(function(result) {
   console.log("Success!", result);
-    userCtrl.createUsrAuth(result, req, res);
+    userCtrl.createUserAuth(result, req, res);
 }).catch(function(error) {
   console.log("Failed!", error);
 });
