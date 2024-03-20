@@ -116,7 +116,7 @@ router.post('/signup', function(req, res, next){
         fullName: req.body.fullName,
         password: req.body.password,
         userType: req.body.userType,
-        role: 'Basic'
+        role: 'Admin'
     });
     console.log(newUser);
     var token = newUser.generateJWT();
@@ -133,7 +133,7 @@ router.post('/signup', function(req, res, next){
         });
 });
 //login user 
-router.post('/login', function(req, res){
+router.post('/login', function(req, res, next){
     console.log(req.body);
 
     User.findOne({username: req.body.username}, function(err, user){
@@ -143,8 +143,8 @@ router.post('/login', function(req, res){
         
             console.log("Attempt failed to login with user:" + user.username);
             
-            res.json({msg: m});
-        }
+            res.json({m});
+        } else {
          var token;
           token = user.generateJWT();
           user.token = token;
@@ -152,6 +152,7 @@ router.post('/login', function(req, res){
           res.json({
             "token" : token
           });
+        };
 
 
    });

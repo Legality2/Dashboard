@@ -14,7 +14,7 @@ router.param('id', function(req, res, next, id){
 
 //get all users
 
-router.get('/user', function(req, res){
+router.get('/users', function(req, res){
     usrCtrl.getAllUsers(res);
 });
 
@@ -37,37 +37,25 @@ router.put('/user/:userId/group', function(req, res){
 });
 //new user
 //new user
-router.post('/user', function(req, res){
-
-    console.log(req.body);
-    var newUser = new User({
+router.post('/user', function(req, res, next){
+    const newUser = new User({
         username: req.body.username,
-        email: req.body.email,
-        fullName: req.body.fullName,
         password: req.body.password,
-        userType: req.body.userType,
-        role: req.body.role 
+        role: req.body.role
     });
+    
+    console.log(newUser);
+    
 
-    newUser.save(function(err, usr){
-        if(err) {
-            res.json({msg: err});
-           
-        }
-        else {
-
-        
-
-        console.log("new user created");
-        console.log(usr);
-       
-        res.status(200);
-        res.json({
-          "success" : "data was created and saved in db"
+        newUser.save(function(err){
+            if(err){
+                console.log(err);
+                next();
+            } else {
+                console.log('new user has signed up');
+                res.json({msg: "you successfully created an account!"});
+            }
         });
-    };
-    });
-
 });
 
 

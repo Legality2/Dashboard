@@ -98,10 +98,13 @@ module.exports.updateUser = function(req, res){
 };
 
 //delete user
-module.exports.removeUser = function(req, res){
-    var id = req.params.id;
+module.exports.removeUser = function(req, res, next){
+    var id = req.query.id;
 User.remove({ _id: id }, function (err) {
-    if (err) return handleError(err);
+    if (err) {
+        console.log(err);
+        next();
+    };
     // deleted at most one tank document
     console.log('user has beeen deleted');
     res.json({msg: 'user has been deleted succesfully'});

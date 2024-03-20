@@ -16,6 +16,8 @@ var UserSchema = new Schema({
   password: {
         type: String
     },
+  profileImg: String,
+  imgName: String,
   socketId: String,
   token: String,
   google: {
@@ -82,6 +84,8 @@ UserSchema.methods.generateJWT = function(){
     this.token = jwt.sign({
       userId: this.userId,
       username: this.username,
+      imgName: this.imgName,
+      profileImg: this.profileImg,
       _id: this._id,
       role: this.role,
       exp: parseInt(exp.getTime() / 1000),

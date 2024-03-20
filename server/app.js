@@ -7,13 +7,16 @@ const cors = require('cors');
 const logger = require('morgan');
 const alpha = require('alphavantage')({ key: 'S7JDVTFR1AM335UC'});
 const indexRouter = require('./routes/index');
+const uploadRoute = require('./api/routes/upload/uploadRoutes');
+const fileRoute = require('./api/routes/files');
 const userRoute = require('./api/routes/userRoute');
 const authRoute = require('./api/routes/auth');
+const prodRoute = require('./api/routes/ProdRoutes/pRoute');
 
 //event controller
 const eventCtrl = require("./api/controllers/events/eventCtrl");
 //alpa vantage key S7JDVTFR1AM335UC
-mongoose.connect('mongodb+srv://legality:Advira-806@cluster0.rwesn.mongodb.net/yellowStone?retryWrites=true&w=majority', {useNewUrlParser: true});
+mongoose.connect('mongodb://192.168.68.81:27017/NS?retryWrites=true&w=majority', {useNewUrlParser: true});
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
@@ -35,7 +38,10 @@ app.use('/build', express.static(path.join(__dirname, './build')))
 app.use('/assets', express.static(path.join(__dirname, '../client/ys-enhance/src/assets')));
 app.use('/static', express.static(path.join(__dirname, './build/static')));
 app.use(express.static(path.join(__dirname, 'public')));
-app.use('/api/auth', authRoute)
+app.use('files', express.static(path.join(__dirname, '../files')));
+app.use('/api/auth', authRoute);
+app.use('/api', prodRoute);
+app.use('/api', fileRoute);
 app.use('/api', userRoute);
 app.get('/', function(req, res){
   res.sendFile(path.join(__dirname, '../client/ys-enhance/public/index.html'));
